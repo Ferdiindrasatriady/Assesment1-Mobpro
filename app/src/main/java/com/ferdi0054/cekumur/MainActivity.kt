@@ -8,36 +8,14 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material3.Button
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DisplayMode
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -49,9 +27,7 @@ import com.ferdi0054.cekumur.ui.theme.CekUmurTheme
 import java.text.SimpleDateFormat
 import java.time.Period
 import java.time.ZoneId
-import java.util.Date
-import java.util.Locale
-
+import java.util.*
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -84,7 +60,6 @@ fun MainScreen() {
         }
     ) { innerPadding ->
         ScreenContent(Modifier.padding(innerPadding))
-
     }
 }
 
@@ -96,9 +71,11 @@ fun ScreenContent(modifier: Modifier = Modifier) {
     var tanggalPilihan by remember { mutableStateOf("") }
 
     var showDatePicker by remember { mutableStateOf(false) }
-    var activeDateField by remember { mutableStateOf("") } // "lahir" atau "pilihan"
+    var pilihanAtauTanggal by remember { mutableStateOf("") }
 
     val formatter = remember { SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()) }
+
+    var hasilUmur by remember { mutableStateOf("") }
 
     Column(
         modifier = modifier
@@ -113,6 +90,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.fillMaxWidth()
         )
+
         OutlinedTextField(
             value = namaUser,
             onValueChange = { namaUser = it },
@@ -134,7 +112,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                     imageVector = Icons.Default.DateRange,
                     contentDescription = "Ikon Kalender",
                     modifier = Modifier.clickable {
-                        activeDateField = "lahir"
+                        pilihanAtauTanggal = "lahir"
                         showDatePicker = true
                     }
                 )
@@ -153,7 +131,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                     imageVector = Icons.Default.DateRange,
                     contentDescription = "Ikon Kalender",
                     modifier = Modifier.clickable {
-                        activeDateField = "pilihan"
+                        pilihanAtauTanggal = "pilihan"
                         showDatePicker = true
                     }
                 )
@@ -162,26 +140,25 @@ fun ScreenContent(modifier: Modifier = Modifier) {
             keyboardOptions = KeyboardOptions.Default,
             modifier = Modifier.fillMaxWidth()
         )
-        var hasilUmur by remember { mutableStateOf("") }
 
         Button(
             onClick = {
-                try {
-                    val birthDate = formatter.parse(tanggalLahir)
-                    val selectedDate = formatter.parse(tanggalPilihan)
+                val birthDate = formatter.parse(tanggalLahir)
+                val selectedDate = formatter.parse(tanggalPilihan)
 
-                    if (birthDate != null && selectedDate != null) {
-                        val birthLocalDate = birthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-                        val selectedLocalDate = selectedDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+                if (birthDate != null && selectedDate != null) {
+                    val birthLocalDate = birthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+                    val selectedLocalDate = selectedDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
 
-                        val period = Period.between(birthLocalDate, selectedLocalDate)
-
-                        hasilUmur = "${period.years} tahun ${period.months} bulan ${period.days} hari"
+                    if (birthLocalDate.isAfter(selectedLocalDate)) {
+                        hasilUmur = "Tanggal lahir tidak boleh setelah tanggal pilihan."
                     } else {
-                        hasilUmur = "Format tanggal tidak valid"
+                        val period = Period.between(birthLocalDate, selectedLocalDate)
+                        hasilUmur = "$namaUser: umur Anda ${period.years} tahun ${period.months} bulan ${period.days} hari"
                     }
-                } catch (e: Exception) {
-                    hasilUmur = "Terjadi kesalahan saat menghitung"
+
+                } else {
+                    hasilUmur = "Format tanggal tidak valid."
                 }
             },
             modifier = Modifier.padding(top = 8.dp),
@@ -189,14 +166,14 @@ fun ScreenContent(modifier: Modifier = Modifier) {
         ) {
             Text(text = stringResource(R.string.hitung))
         }
+
         if (hasilUmur.isNotEmpty()) {
             Text(
-                text = "Umur: $hasilUmur",
+                text = hasilUmur,
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(top = 16.dp)
             )
         }
-
     }
 
     if (showDatePicker) {
@@ -204,9 +181,9 @@ fun ScreenContent(modifier: Modifier = Modifier) {
             onDateSelected = { selectedMillis ->
                 selectedMillis?.let {
                     val dateString = formatter.format(Date(it))
-                    if (activeDateField == "lahir") {
+                    if (pilihanAtauTanggal == "lahir") {
                         tanggalLahir = dateString
-                    } else if (activeDateField == "pilihan") {
+                    } else if (pilihanAtauTanggal == "pilihan") {
                         tanggalPilihan = dateString
                     }
                 }
@@ -218,7 +195,6 @@ fun ScreenContent(modifier: Modifier = Modifier) {
         )
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
