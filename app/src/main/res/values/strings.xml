@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Cek Umur</string>
-    <string name="intro">Aplikasi ini dibuat untuk menghitung usia seseorang berdasarkan tanggal lahir yang dimasukkan.
-    Cobalah sekarang!</string>
+    <string name="intro">Aplikasi ini dibuat untuk menghitung usia seseorang berdasarkan tanggal lahir yang dimasukkan.Cobalah sekarang!</string>
     <string name="nama_user">Nama User</string>
     <string name="tanggal_lahir">Tanggal Lahir</string>
     <string name="tanggal_pilihan">Tanggal Pilihan</string>
