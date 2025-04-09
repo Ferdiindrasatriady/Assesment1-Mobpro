@@ -1,11 +1,7 @@
-package com.ferdi0054.cekumur
+package com.ferdi0054.cekumur.ui.screen
 
 import android.content.res.Configuration
 import android.os.Build
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -41,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ferdi0054.cekumur.R
 import com.ferdi0054.cekumur.ui.theme.CekUmurTheme
 import java.text.SimpleDateFormat
 import java.time.Period
@@ -48,20 +45,9 @@ import java.time.ZoneId
 import java.util.Date
 import java.util.Locale
 
-class MainActivity : ComponentActivity() {
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            CekUmurTheme {
-                MainScreen()
-            }
-        }
-    }
-}
 
 @RequiresApi(Build.VERSION_CODES.O)
+@Preview(showBackground = true)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
