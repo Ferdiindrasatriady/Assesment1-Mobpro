@@ -1,10 +1,12 @@
 package com.ferdi0054.cekumur
 
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -44,9 +46,15 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ferdi0054.cekumur.ui.theme.CekUmurTheme
+import java.text.SimpleDateFormat
+import java.time.Period
+import java.time.ZoneId
+import java.util.Date
+import java.util.Locale
 
 
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -58,6 +66,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
@@ -79,14 +88,22 @@ fun MainScreen() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ScreenContent(modifier: Modifier = Modifier) {
     var namaUser by remember { mutableStateOf("") }
     var tanggalLahir by remember { mutableStateOf("") }
     var tanggalPilihan by remember { mutableStateOf("") }
+
+    var showDatePicker by remember { mutableStateOf(false) }
+    var activeDateField by remember { mutableStateOf("") } // "lahir" atau "pilihan"
+
+    val formatter = remember { SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()) }
+
     Column(
         modifier = modifier
-            .fillMaxSize().verticalScroll(rememberScrollState())
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -102,12 +119,11 @@ fun ScreenContent(modifier: Modifier = Modifier) {
             label = { Text(text = stringResource(R.string.nama_user)) },
             singleLine = true,
             keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number,
+                keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next
             ),
             modifier = Modifier.fillMaxWidth()
         )
-        var addDatePicker by remember { mutableStateOf(false) }
 
         OutlinedTextField(
             value = tanggalLahir,
@@ -118,17 +134,16 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                     imageVector = Icons.Default.DateRange,
                     contentDescription = "Ikon Kalender",
                     modifier = Modifier.clickable {
-                        addDatePicker = true
+                        activeDateField = "lahir"
+                        showDatePicker = true
                     }
                 )
             },
             singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Next
-            ),
+            keyboardOptions = KeyboardOptions.Default,
             modifier = Modifier.fillMaxWidth()
         )
+
         OutlinedTextField(
             value = tanggalPilihan,
             onValueChange = { tanggalPilihan = it },
@@ -136,29 +151,74 @@ fun ScreenContent(modifier: Modifier = Modifier) {
             trailingIcon = {
                 Icon(
                     imageVector = Icons.Default.DateRange,
-                    contentDescription = "Ikon Kalender"
+                    contentDescription = "Ikon Kalender",
+                    modifier = Modifier.clickable {
+                        activeDateField = "pilihan"
+                        showDatePicker = true
+                    }
                 )
             },
             singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Next
-            ),
+            keyboardOptions = KeyboardOptions.Default,
             modifier = Modifier.fillMaxWidth()
         )
+        var hasilUmur by remember { mutableStateOf("") }
 
-        if (addDatePicker) DatePickerModalInput({}) {
-            addDatePicker = false
-        }
         Button(
-            onClick = {},
+            onClick = {
+                try {
+                    val birthDate = formatter.parse(tanggalLahir)
+                    val selectedDate = formatter.parse(tanggalPilihan)
+
+                    if (birthDate != null && selectedDate != null) {
+                        val birthLocalDate = birthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+                        val selectedLocalDate = selectedDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+
+                        val period = Period.between(birthLocalDate, selectedLocalDate)
+
+                        hasilUmur = "${period.years} tahun ${period.months} bulan ${period.days} hari"
+                    } else {
+                        hasilUmur = "Format tanggal tidak valid"
+                    }
+                } catch (e: Exception) {
+                    hasilUmur = "Terjadi kesalahan saat menghitung"
+                }
+            },
             modifier = Modifier.padding(top = 8.dp),
             contentPadding = PaddingValues(horizontal = 32.dp, vertical = 16.dp)
         ) {
             Text(text = stringResource(R.string.hitung))
         }
+        if (hasilUmur.isNotEmpty()) {
+            Text(
+                text = "Umur: $hasilUmur",
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(top = 16.dp)
+            )
+        }
+
+    }
+
+    if (showDatePicker) {
+        DatePickerModalInput(
+            onDateSelected = { selectedMillis ->
+                selectedMillis?.let {
+                    val dateString = formatter.format(Date(it))
+                    if (activeDateField == "lahir") {
+                        tanggalLahir = dateString
+                    } else if (activeDateField == "pilihan") {
+                        tanggalPilihan = dateString
+                    }
+                }
+                showDatePicker = false
+            },
+            onDismiss = {
+                showDatePicker = false
+            }
+        )
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -188,6 +248,7 @@ fun DatePickerModalInput(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
