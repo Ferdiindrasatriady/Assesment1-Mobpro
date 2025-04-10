@@ -19,7 +19,7 @@ fun SetupNavGraph(navController: NavHostController = rememberNavController()) {
             Slide1(navController = navController)
         }
         composable(route = Screen.CekUmur.route) {
-            MainScreen()
+            MainScreen(navController)
         }
     }
 }

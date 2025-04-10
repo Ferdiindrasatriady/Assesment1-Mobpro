@@ -6,4 +6,5 @@
     <string name="tanggal_pilihan">Tanggal Pilihan</string>
     <string name="hitung">Hitung</string>
     <string name="input_invalid">Tidak boleh kosong</string>
+    <string name="kembali">Kembali</string>
 </resources>
