@@ -1,8 +1,6 @@
 package com.ferdi0054.cekumur.ui.screen
 
 import android.content.res.Configuration
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -40,13 +38,11 @@ import androidx.compose.ui.unit.dp
 import com.ferdi0054.cekumur.R
 import com.ferdi0054.cekumur.ui.theme.CekUmurTheme
 import java.text.SimpleDateFormat
-import java.time.Period
-import java.time.ZoneId
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,11 +60,10 @@ fun MainScreen() {
             )
         }
     ) { innerPadding ->
-        ScreenContent(Modifier.padding(innerPadding))
+        ScreenContent(modifier = Modifier.padding(innerPadding))
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ScreenContent(modifier: Modifier = Modifier) {
     var namaUser by remember { mutableStateOf("") }
@@ -198,18 +193,29 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 val selectedDate = formatter.parse(tanggalPilihan)
 
                 if (birthDate != null && selectedDate != null) {
-                    val birthLocal =
-                        birthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-                    val selectedLocal =
-                        selectedDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+                    val calLahir = Calendar.getInstance().apply { time = birthDate }
+                    val calPilihan = Calendar.getInstance().apply { time = selectedDate }
 
-                    if (birthLocal.isAfter(selectedLocal)) {
+                    if (calLahir.after(calPilihan)) {
                         hasilUmur = "! Tanggal lahir tidak boleh setelah tanggal pilihan."
                     } else {
-                        val period = Period.between(birthLocal, selectedLocal)
-                        hasilUmur =
-                            "$namaUser: Umur Anda ${period.years} tahun ${period.months} bulan ${period.days} hari"
+                        var tahun = calPilihan.get(Calendar.YEAR) - calLahir.get(Calendar.YEAR)
+                        var bulan = calPilihan.get(Calendar.MONTH) - calLahir.get(Calendar.MONTH)
+                        var hari = calPilihan.get(Calendar.DAY_OF_MONTH) - calLahir.get(Calendar.DAY_OF_MONTH)
+
+                        if (hari < 0) {
+                            bulan--
+                            hari += calLahir.getActualMaximum(Calendar.DAY_OF_MONTH)
+                        }
+
+                        if (bulan < 0) {
+                            tahun--
+                            bulan += 12
+                        }
+
+                        hasilUmur = "$namaUser: Umur Anda $tahun tahun $bulan bulan $hari hari"
                     }
+
                 } else {
                     hasilUmur = "! Format tanggal tidak valid."
                 }
@@ -277,7 +283,6 @@ fun DatePickerModalInput(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
