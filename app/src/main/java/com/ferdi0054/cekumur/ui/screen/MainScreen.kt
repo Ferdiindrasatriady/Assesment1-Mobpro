@@ -233,11 +233,18 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                             bulan += 12
                         }
 
-                        hasilUmur = "$namaUser: Umur Anda $tahun tahun $bulan bulan $hari hari"
+
+                        val locale = Locale.getDefault().language
+                        hasilUmur = if (locale == "en") {
+                            "$namaUser: Your age is $tahun years $bulan months $hari days"
+                        } else {
+                            "$namaUser: Umur Anda $tahun tahun $bulan bulan $hari hari"
+                        }
+
                     }
 
-                } else {
-                    hasilUmur = "! Format tanggal tidak valid."
+//                } else {
+//                    hasilUmur = "! Format tanggal tidak valid."
                 }
             },
             modifier = Modifier.padding(top = 8.dp)
