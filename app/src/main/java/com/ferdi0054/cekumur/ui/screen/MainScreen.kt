@@ -1,9 +1,12 @@
 package com.ferdi0054.cekumur.ui.screen
 
+import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -34,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -54,7 +58,7 @@ fun MainScreen(navHostController: NavHostController) {
         topBar = {
             CenterAlignedTopAppBar(
                 navigationIcon = {
-                    IconButton(onClick = {navHostController.popBackStack() }) {
+                    IconButton(onClick = { navHostController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.kembali),
@@ -93,6 +97,8 @@ fun ScreenContent(modifier: Modifier = Modifier) {
     val formatter = remember { SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()) }
 
     var hasilUmur by remember { mutableStateOf("") }
+
+    val context = LocalContext.current
 
     Column(
         modifier = modifier
@@ -214,7 +220,8 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                     } else {
                         var tahun = calPilihan.get(Calendar.YEAR) - calLahir.get(Calendar.YEAR)
                         var bulan = calPilihan.get(Calendar.MONTH) - calLahir.get(Calendar.MONTH)
-                        var hari = calPilihan.get(Calendar.DAY_OF_MONTH) - calLahir.get(Calendar.DAY_OF_MONTH)
+                        var hari =
+                            calPilihan.get(Calendar.DAY_OF_MONTH) - calLahir.get(Calendar.DAY_OF_MONTH)
 
                         if (hari < 0) {
                             bulan--
@@ -244,7 +251,23 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(top = 16.dp)
             )
+            Button(
+                onClick = {
+                    shareData(
+                        context = context,
+                        message = context.getString(
+                            R.string.bagikan_template,
+                            namaUser, tanggalLahir, tanggalPilihan, hasilUmur
+                        )
+                    )
+                },
+                modifier = Modifier.padding(top = 8.dp),
+                contentPadding = PaddingValues(horizontal = 32.dp, vertical = 16.dp)
+            ) {
+                Text(text = stringResource(R.string.bagikan))
+            }
         }
+
 
         if (showDatePicker) {
             DatePickerModalInput(
@@ -264,6 +287,16 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 onDismiss = { showDatePicker = false }
             )
         }
+    }
+}
+
+private fun shareData(context: Context, message: String) {
+    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+        type = "text/paint"
+        putExtra(Intent.EXTRA_TEXT, message)
+    }
+    if (shareIntent.resolveActivity(context.packageManager) != null) {
+        context.startActivity(shareIntent)
     }
 }
 

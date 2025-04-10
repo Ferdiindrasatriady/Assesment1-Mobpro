@@ -7,4 +7,6 @@
     <string name="hitung">Hitung</string>
     <string name="input_invalid">Tidak boleh kosong</string>
     <string name="kembali">Kembali</string>
+    <string name="bagikan">Bagikan</string>
+    <string name="bagikan_template">Nama: %1$s \nTanggal Lahir: %2$s \nTanggal Pilihan: %3$s\n Umur: %4$s </string>
 </resources>
