@@ -12,10 +12,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.ferdi0054.cekumur.R
+import com.ferdi0054.cekumur.navigation.Screen
 
 @Composable
-fun Slide1() {
+fun Slide1(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -35,7 +38,7 @@ fun Slide1() {
             style = MaterialTheme.typography.bodyLarge
         )
         Button(
-            onClick = { /* nanti diisi aksi atau navigasi */ },
+            onClick = { navController.navigate(Screen.CekUmur.route) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 40.dp, bottom = 32.dp)
@@ -48,5 +51,6 @@ fun Slide1() {
 @Preview(showBackground = true)
 @Composable
 fun Slide1Preview() {
-    Slide1()
+    val navController = rememberNavController()
+    Slide1(navController = navController)
 }
