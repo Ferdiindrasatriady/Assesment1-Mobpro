@@ -121,14 +121,14 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 namaUser = it
                 namaError = false
             },
-            label = { Text("Nama") },
+            label = { Text(stringResource(R.string.nama)) },
             isError = namaError,
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
         if (namaError) {
             Text(
-                text = "Nama tidak boleh kosong",
+                text = stringResource(R.string.warning_nama),
                 color = MaterialTheme.colorScheme.error,
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.align(Alignment.Start)
@@ -142,7 +142,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 tanggalLahir = it
                 tanggalLahirError = false
             },
-            label = { Text("Tanggal Lahir") },
+            label = { Text(stringResource(R.string.tgl_lahir)) },
             isError = tanggalLahirError,
             trailingIcon = {
                 Icon(
@@ -159,7 +159,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
         )
         if (tanggalLahirError) {
             Text(
-                text = "Tanggal lahir tidak boleh kosong",
+                text = stringResource(R.string.warning_lahir),
                 color = MaterialTheme.colorScheme.error,
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.align(Alignment.Start)
@@ -173,7 +173,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 tanggalPilihan = it
                 tanggalPilihanError = false
             },
-            label = { Text("Tanggal Pilihan") },
+            label = { Text(stringResource(R.string.tgl_piliha)) },
             isError = tanggalPilihanError,
             trailingIcon = {
                 Icon(
@@ -190,7 +190,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
         )
         if (tanggalPilihanError) {
             Text(
-                text = "Tanggal pilihan tidak boleh kosong",
+                text = stringResource(R.string.warning_pilihan),
                 color = MaterialTheme.colorScheme.error,
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.align(Alignment.Start)
@@ -242,7 +242,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
             },
             modifier = Modifier.padding(top = 8.dp)
         ) {
-            Text("Hitung")
+            Text(stringResource(R.string.hitung))
         }
 
         if (hasilUmur.isNotEmpty()) {

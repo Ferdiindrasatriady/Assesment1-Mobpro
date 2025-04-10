@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Cek Umur</string>
+    <string name="intro">Aplikasi ini dibuat untuk menghitung usia seseorang berdasarkan tanggal lahir yang dimasukkan.Cobalah sekarang</string>
+    <string name="nama_user">Nama User</string>
+    <string name="tanggal_lahir">Tanggal Lahir</string>
+    <string name="tanggal_pilihan">Tanggal Pilihan</string>
+    <string name="hitung">Hitung</string>
+    <string name="input_invalid">Tidak boleh kosong</string>
+    <string name="intro_s1">Apakah Anda siap untuk mengecek umur Anda?</string>
+    <string name="btn_s1">Mulai Sekarang</string>
+    <string name="nama">Nama</string>
+    <string name="tgl_lahir">Tanggal Lahir</string>
+    <string name="tgl_piliha">Tanggal Pilihan</string>
+    <string name="warning_pilihan">Tanggal pilihan tidak boleh kosong</string>
+    <string name="warning_lahir">Tanggal lahir tidak boleh kosong</string>
+    <string name="warning_nama">Nama Tidak Boleh Kosong</string>
+    <string name="kembali">Kembali</string>
+    <string name="bagikan">Bagikan</string>
+    <string name="bagikan_template">Nama: %1$s \nTanggal Lahir: %2$s \nTanggal Pilihan: %3$s\n Umur: %4$s </string>
+</resources>

@@ -1,12 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Cek Umur</string>
-    <string name="intro">Aplikasi ini dibuat untuk menghitung usia seseorang berdasarkan tanggal lahir yang dimasukkan.Cobalah sekarang</string>
-    <string name="nama_user">Nama User</string>
-    <string name="tanggal_lahir">Tanggal Lahir</string>
-    <string name="tanggal_pilihan">Tanggal Pilihan</string>
-    <string name="hitung">Hitung</string>
-    <string name="input_invalid">Tidak boleh kosong</string>
-    <string name="kembali">Kembali</string>
-    <string name="bagikan">Bagikan</string>
-    <string name="bagikan_template">Nama: %1$s \nTanggal Lahir: %2$s \nTanggal Pilihan: %3$s\n Umur: %4$s </string>
+    <string name="app_name">Age Checker</string>
+    <string name="intro">This app is designed to calculate a person\'s age based on the entered birth date. Try it now!</string>
+    <string name="nama_user">User Name</string>
+    <string name="tanggal_lahir">Birth Date</string>
+    <string name="tanggal_pilihan">Selected Date</string>
+    <string name="hitung">Calculate</string>
+    <string name="input_invalid">Cannot be empty</string>
+    <string name="kembali">Back</string>
+    <string name="bagikan">Share</string>
+    <string name="bagikan_template">"Name: %1$s   Birth Date: %2$s   Selected Date: %3$s   Age: %4$s "</string>
+    <string name="intro_s1">Are you ready to check your age?</string>
+    <string name="btn_s1">" Start Now"</string>
+    <string name="nama">" Name"</string>
+    <string name="tgl_lahir">Date of Birth</string>
+    <string name="tgl_piliha">" Selected Date"</string>
+    <string name="warning_pilihan">" Selected date cannot be empty"</string>
+    <string name="warning_lahir">Date of birth cannot be empty</string>
+    <string name="warning_nama">Name cannot be empty</string>
 </resources>
