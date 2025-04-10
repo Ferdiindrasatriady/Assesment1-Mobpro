@@ -1,12 +1,7 @@
 package com.ferdi0054.cekumur.ui.screen
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,7 +15,7 @@ import androidx.compose.ui.unit.sp
 import com.ferdi0054.cekumur.R
 
 @Composable
-fun Slide1(lanjut: () -> Unit) {
+fun Slide1() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -28,11 +23,8 @@ fun Slide1(lanjut: () -> Unit) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Image(
-            painter = painterResource(
-                id = R.drawable.bingung
-            ),
+            painter = painterResource(id = R.drawable.bingung),
             contentDescription = "Ilustrasi Cek Umur",
             modifier = Modifier.size(250.dp)
         )
@@ -43,20 +35,18 @@ fun Slide1(lanjut: () -> Unit) {
             style = MaterialTheme.typography.bodyLarge
         )
         Button(
-            onClick = lanjut,
+            onClick = { /* nanti diisi aksi atau navigasi */ },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 40.dp, bottom = 32.dp)
         ) {
             Text(text = "Mulai Sekarang")
         }
-
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun Slide1Preview() {
-    Slide1(lanjut = {})
+    Slide1()
 }
-
