@@ -20,4 +20,5 @@
     <string name="warning_nama">Name cannot be empty</string>
     <string name="check_umur">Check age</string>
     <string name="belum_bisa_tambah">Not yet</string>
+    <string name="x_diklik">%1$s onklik!</string>
 </resources>

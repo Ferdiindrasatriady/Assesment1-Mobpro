@@ -20,4 +20,5 @@
     <string name="bagikan_template">Nama: %1$s \nTanggal Lahir: %2$s \nTanggal Pilihan: %3$s\n Umur: %4$s </string>
     <string name="check_umur">Cek umur</string>
     <string name="belum_bisa_tambah">Belum bisa tambah</string>
+    <string name="x_diklik">diklik!</string>
 </resources>
