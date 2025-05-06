@@ -3,7 +3,6 @@ package com.ferdi0054.cekumur.ui.screen
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,7 +14,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -23,7 +21,6 @@ import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -57,7 +54,6 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(navHostController: NavHostController) {
-    val context = LocalContext.current
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -79,19 +75,6 @@ fun MainScreen(navHostController: NavHostController) {
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 )
             )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    Toast.makeText(context, R.string.belum_bisa_tambah, Toast.LENGTH_SHORT).show()
-                }
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = stringResource(R.string.check_umur),
-                    tint = MaterialTheme.colorScheme.primary
-                )
-            }
         }
     ) { innerPadding ->
         ScreenContent(modifier = Modifier.padding(innerPadding))
@@ -213,7 +196,6 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 modifier = Modifier.align(Alignment.Start)
             )
         }
-
         Button(
             onClick = {
                 namaError = namaUser.isBlank()
@@ -239,7 +221,6 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                         var bulan = calPilihan.get(Calendar.MONTH) - calLahir.get(Calendar.MONTH)
                         var hari =
                             calPilihan.get(Calendar.DAY_OF_MONTH) - calLahir.get(Calendar.DAY_OF_MONTH)
-
                         if (hari < 0) {
                             bulan--
                             hari += calLahir.getActualMaximum(Calendar.DAY_OF_MONTH)
@@ -291,8 +272,6 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 Text(text = stringResource(R.string.bagikan))
             }
         }
-
-
         if (showDatePicker) {
             DatePickerModalInput(
                 onDateSelected = { selectedMillis ->
@@ -313,7 +292,6 @@ fun ScreenContent(modifier: Modifier = Modifier) {
         }
     }
 }
-
 private fun shareData(context: Context, message: String) {
     val shareIntent = Intent(Intent.ACTION_SEND).apply {
         type = "text/paint"
@@ -323,8 +301,6 @@ private fun shareData(context: Context, message: String) {
         context.startActivity(shareIntent)
     }
 }
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePickerModalInput(
