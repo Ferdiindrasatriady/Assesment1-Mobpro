@@ -28,13 +28,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.ferdi0054.cekumur.R
 import com.ferdi0054.cekumur.model.Catatan
+import com.ferdi0054.cekumur.navigation.Screen
 import com.ferdi0054.cekumur.ui.theme.CekUmurTheme
 
 @SuppressLint("StringFormatInvalid")
 @Composable
-fun SlideList() {
+fun SlideList(navController: NavHostController) {
 
     val viewModel: MainViewModel = viewModel()
     val data = viewModel.data
@@ -44,11 +47,7 @@ fun SlideList() {
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    Toast.makeText(
-                        context,
-                        R.string.belum_bisa_tambah,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                   navController.navigate(Screen.CekUmur.route)
                 }
             ) {
                 Icon(
@@ -107,6 +106,6 @@ fun ListItem(catatan: Catatan, onClick: () -> Unit) {
 @Composable
 fun SlideListScreenPreview() {
     CekUmurTheme {
-        SlideList() // diperbaiki agar preview menampilkan SlideList
+        SlideList(rememberNavController()) // diperbaiki agar preview menampilkan SlideList
     }
 }

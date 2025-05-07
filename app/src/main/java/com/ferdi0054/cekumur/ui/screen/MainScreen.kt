@@ -344,6 +344,6 @@ fun DatePickerModalInput(
 @Composable
 fun MainScreenPreview() {
     CekUmurTheme {
-        MainScreen(navHostController = rememberNavController())
+        MainScreen(rememberNavController())
     }
 }
