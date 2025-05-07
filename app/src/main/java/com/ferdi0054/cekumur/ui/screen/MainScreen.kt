@@ -15,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DatePicker
@@ -73,7 +74,16 @@ fun MainScreen(navHostController: NavHostController) {
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.primary,
-                )
+                ),
+                actions = {
+                    IconButton(onClick = {navHostController.popBackStack()}) {
+                        Icon(
+                            imageVector = Icons.Outlined.Check,
+                            contentDescription = stringResource(R.string.simpan),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
             )
         }
     ) { innerPadding ->
