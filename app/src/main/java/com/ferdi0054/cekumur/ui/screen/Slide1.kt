@@ -41,7 +41,7 @@ fun Slide1(navController: NavHostController) {
             style = MaterialTheme.typography.bodyLarge
         )
         Button(
-            onClick = { navController.navigate(Screen.CekUmur.route) },
+            onClick = { navController.navigate(Screen.SlideList.route) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 40.dp, bottom = 32.dp)
