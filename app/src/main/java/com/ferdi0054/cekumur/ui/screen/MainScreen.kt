@@ -3,6 +3,7 @@ package com.ferdi0054.cekumur.ui.screen
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,6 +28,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -42,10 +45,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.ferdi0054.cekumur.R
 import com.ferdi0054.cekumur.ui.theme.CekUmurTheme
+import com.ferdi0054.cekumur.util.ViewModelFactory
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -56,6 +61,15 @@ const val Key_ID_CATATAN = "idCatatan"
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(navHostController: NavHostController, id: Long? = null) {
+    val context = LocalContext.current
+    val factory = ViewModelFactory(context)
+    val viewModel: DetailViewModel = viewModel(factory = factory)
+
+    var nama by remember { mutableStateOf("") }
+    var tgl_lahir by remember { mutableStateOf("") }
+    var tgl_skrg by remember { mutableStateOf("") }
+    var hasil by remember { mutableStateOf("") }
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -80,7 +94,12 @@ fun MainScreen(navHostController: NavHostController, id: Long? = null) {
                     titleContentColor = MaterialTheme.colorScheme.primary
                 ),
                 actions = {
-                    IconButton(onClick = {navHostController.popBackStack()}) {
+                    IconButton(onClick = {
+                        if (id == null){
+                            viewModel.insert(nama, tgl_lahir, tgl_skrg, hasil)
+                        }
+                        navHostController.popBackStack()
+                    }) {
                         Icon(
                             imageVector = Icons.Outlined.Check,
                             contentDescription = stringResource(R.string.simpan),
@@ -97,6 +116,7 @@ fun MainScreen(navHostController: NavHostController, id: Long? = null) {
 
 @Composable
 fun ScreenContent(modifier: Modifier = Modifier) {
+
     var namaUser by remember { mutableStateOf("") }
     var tanggalLahir by remember { mutableStateOf("") }
     var tanggalPilihan by remember { mutableStateOf("") }
@@ -112,7 +132,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
 
     var hasilUmur by remember { mutableStateOf("") }
 
-    val context = LocalContext.current
+//    val context = LocalContext.current
 
     Column(
         modifier = modifier
@@ -271,7 +291,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
         ) {
             Text(stringResource(R.string.hitung))
         }
-
+        val context = LocalContext.current
         if (hasilUmur.isNotEmpty()) {
             Text(
                 text = hasilUmur,
@@ -280,6 +300,10 @@ fun ScreenContent(modifier: Modifier = Modifier) {
             )
             Button(
                 onClick = {
+                    if (namaError || tanggalLahirError || tanggalPilihanError){
+                        Toast.makeText(context, R.string.invalid, Toast.LENGTH_SHORT).show()
+                        return@Button
+                    }
                     shareData(
                         context = context,
                         message = context.getString(
