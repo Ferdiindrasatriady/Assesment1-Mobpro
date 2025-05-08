@@ -51,10 +51,11 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
+const val Key_ID_CATATAN = "idCatatan"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(navHostController: NavHostController) {
+fun MainScreen(navHostController: NavHostController, id: Long? = null) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -69,7 +70,10 @@ fun MainScreen(navHostController: NavHostController) {
                     }
                 },
                 title = {
+                    if (id == null)
                     Text(text = stringResource(id = R.string.app_name))
+                    else
+                        Text(text = stringResource(id = R.string.edit_inputan))
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -220,6 +224,14 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 val birthDate = formatter.parse(tanggalLahir)
                 val selectedDate = formatter.parse(tanggalPilihan)
 
+//                val birthDate = try { formatter.parse(tanggalLahir) } catch (e: Exception) { null }
+//                val selectedDate = try { formatter.parse(tanggalPilihan) } catch (e: Exception) { null }
+//
+//                if (birthDate == null || selectedDate == null) {
+//                    hasilUmur = context.getString(R.string.warning_nama) // atau string langsung
+//                    return@Button
+//                }
+
                 if (birthDate != null && selectedDate != null) {
                     val calLahir = Calendar.getInstance().apply { time = birthDate }
                     val calPilihan = Calendar.getInstance().apply { time = selectedDate }
@@ -304,7 +316,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
 }
 private fun shareData(context: Context, message: String) {
     val shareIntent = Intent(Intent.ACTION_SEND).apply {
-        type = "text/paint"
+        type = "text/plain"
         putExtra(Intent.EXTRA_TEXT, message)
     }
     if (shareIntent.resolveActivity(context.packageManager) != null) {
