@@ -24,7 +24,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -37,15 +40,17 @@ import com.ferdi0054.cekumur.R
 import com.ferdi0054.cekumur.model.Catatan
 import com.ferdi0054.cekumur.navigation.Screen
 import com.ferdi0054.cekumur.ui.theme.CekUmurTheme
+import com.ferdi0054.cekumur.util.ViewModelFactory
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("StringFormatInvalid")
 @Composable
 fun SlideList(navController: NavHostController) {
-
-    val viewModel: MainViewModel = viewModel()
-    val data = viewModel.data
+    val context = LocalContext.current
+    val factory = ViewModelFactory(context)
+    val viewModel: MainViewModel = viewModel(factory = factory)
+    val data by viewModel.data.collectAsState()
 
     Scaffold(
         floatingActionButton = {
