@@ -7,7 +7,6 @@ import androidx.room.Update
 import com.ferdi0054.cekumur.model.Catatan
 import kotlinx.coroutines.flow.Flow
 
-interface UmurDao {
     @Dao
     interface UmurDao{
 
@@ -21,4 +20,3 @@ interface UmurDao {
         @Query ("SELECT * FROM cek_umur ORDER BY tgl_lahir, tgl_skrg DESC")
         fun getCatatan (): Flow<List<Catatan>>
     }
-}
