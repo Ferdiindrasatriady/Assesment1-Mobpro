@@ -55,7 +55,11 @@ import com.ferdi0054.cekumur.R
 import com.ferdi0054.cekumur.model.Catatan
 import com.ferdi0054.cekumur.navigation.Screen
 import com.ferdi0054.cekumur.ui.theme.CekUmurTheme
+import com.ferdi0054.cekumur.util.SettingsDataStore
 import com.ferdi0054.cekumur.util.ViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -67,7 +71,11 @@ fun SlideList(navController: NavHostController) {
     val viewModel: MainViewModel = viewModel(factory = factory)
     val data by viewModel.data.collectAsState()
 
-    var showList by remember { mutableStateOf(true) }
+
+
+
+    val dataStore = SettingsDataStore (LocalContext.current)
+    val showList by dataStore.layoutFlow.collectAsState(true)
 
     Scaffold(
         floatingActionButton = {
@@ -102,7 +110,9 @@ fun SlideList(navController: NavHostController) {
                     titleContentColor = MaterialTheme.colorScheme.primary
                 ),
                 actions = {
-                    IconButton(onClick = {showList = !showList}) {
+                    IconButton(onClick = { CoroutineScope(Dispatchers.IO).launch {
+                        dataStore.saveLayout(!showList)
+                    } }) {
                         Icon(
                             painter = painterResource(
                                 if (showList)R.drawable.baseline_grid_view_24

@@ -11,6 +11,7 @@ activityCompose = "1.10.1"
 composeBom = "2024.04.01"
 navCompose = "2.8.7"
 roomRunTime = "2.6.1"
+datastorePreferences = "1.1.4"
 
 
 [libraries]
@@ -33,6 +34,7 @@ androidx-lifecyle-viewmodel-compose = {group = "androidx.lifecycle", name = "lif
 androidx-room-compiler = {group = "androidx.room", name = "room-compiler", version.ref = "roomRunTime"}
 androidx-room-ktx = {group = "androidx.room", name = "room-ktx", version.ref = "roomRunTime"}
 androidx-room-runtime = {group = "androidx.room", name = "room-runtime", version.ref = "roomRunTime"}
+androidx-datastore-preferences = {module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
