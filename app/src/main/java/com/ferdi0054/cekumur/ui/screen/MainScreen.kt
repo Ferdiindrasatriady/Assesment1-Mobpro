@@ -106,8 +106,7 @@ fun MainScreen(navHostController: NavHostController, id: Long? = null) {
                     }
                     if (id != null) {
                         DeleteAction {
-                            viewModel.delete(id)
-                            navHostController.popBackStack()
+                            viewModel.showDialog = true
                         }
                     }
                 }
@@ -116,6 +115,16 @@ fun MainScreen(navHostController: NavHostController, id: Long? = null) {
     ) { innerPadding ->
         ScreenContent(modifier = Modifier.padding(innerPadding), viewModel = viewModel)
     }
+    if (id != null && viewModel.showDialog) {
+        DisplayAlertDialog(
+            onDismissRequest = { viewModel.showDialog = false }
+        ) {
+            viewModel.showDialog = false
+            viewModel.delete(id)
+            navHostController.popBackStack()
+        }
+    }
+
 }
 
 @Composable

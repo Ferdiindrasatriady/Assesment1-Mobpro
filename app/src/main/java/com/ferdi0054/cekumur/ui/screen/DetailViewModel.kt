@@ -2,6 +2,7 @@ package com.ferdi0054.cekumur.ui.screen
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -20,6 +21,10 @@ class DetailViewModel(private val dao: UmurDao) : ViewModel() {
     var namaError by mutableStateOf(false)
     var tanggalLahirError by mutableStateOf(false)
     var tanggalPilihanError by mutableStateOf(false)
+
+    var showDialog by  mutableStateOf(false)
+
+
     fun insert(nama: String, tglLahir: String, tglSkrg: String, hasil: String) {
         val catatan = Catatan(
             nama = nama,

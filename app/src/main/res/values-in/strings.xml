@@ -27,4 +27,7 @@
     <string name="invalid">Inputan tidak boleh kosong</string>
     <string name="lainya">Opsi lainnya</string>
     <string name="hapus">Hapus catatan</string>
+    <string name="pesan_hapus">Hapus catatan ini?</string>
+    <string name="tombol_hapus">Hapus</string>
+    <string name="tombol_batal">Batal</string>
 </resources>
