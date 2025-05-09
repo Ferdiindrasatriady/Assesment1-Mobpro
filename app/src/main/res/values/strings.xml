@@ -30,4 +30,6 @@
     <string name="pesan_hapus">Delete this note?</string>
     <string name="tombol_hapus">Delete</string>
     <string name="tombol_batal">Cancel</string>
+    <string name="list">List view</string>
+    <string name="grid">List grid</string>
 </resources>
