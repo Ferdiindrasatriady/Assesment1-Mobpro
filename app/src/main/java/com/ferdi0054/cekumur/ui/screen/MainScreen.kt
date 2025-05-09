@@ -43,12 +43,13 @@ fun MainScreen(navHostController: NavHostController, id: Long? = null) {
             viewModel.loadDataById(id)
         }
     }
-
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 navigationIcon = {
-                    IconButton(onClick = { navHostController.popBackStack() }) {
+                    IconButton(onClick = {
+                        navHostController.popBackStack()
+                    }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.kembali),
@@ -70,6 +71,15 @@ fun MainScreen(navHostController: NavHostController, id: Long? = null) {
                 ),
                 actions = {
                     IconButton(onClick = {
+                        viewModel.namaError = viewModel.namaUser.isBlank()
+                        viewModel.tanggalLahirError = viewModel.tanggalLahir.isBlank()
+                        viewModel.tanggalPilihanError = viewModel.tanggalPilihan.isBlank()
+
+                        if (viewModel.namaError || viewModel.tanggalLahirError || viewModel.tanggalPilihanError) {
+                            Toast.makeText(context, "Semua data harus diisi!", Toast.LENGTH_SHORT)
+                                .show()
+                            return@IconButton
+                        }
                         if (id == null) {
                             viewModel.insert(
                                 nama = viewModel.namaUser,
@@ -110,9 +120,7 @@ fun MainScreen(navHostController: NavHostController, id: Long? = null) {
 
 @Composable
 fun ScreenContent(modifier: Modifier = Modifier, viewModel: DetailViewModel) {
-    var namaError by remember { mutableStateOf(false) }
-    var tanggalLahirError by remember { mutableStateOf(false) }
-    var tanggalPilihanError by remember { mutableStateOf(false) }
+
 
     var showDatePicker by remember { mutableStateOf(false) }
     var pilihanAtauTanggal by remember { mutableStateOf("") }
@@ -139,14 +147,14 @@ fun ScreenContent(modifier: Modifier = Modifier, viewModel: DetailViewModel) {
             value = viewModel.namaUser,
             onValueChange = {
                 viewModel.namaUser = it
-                namaError = false
+                viewModel.namaError = false
             },
             label = { Text(stringResource(R.string.nama)) },
-            isError = namaError,
+            isError = viewModel.namaError,
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
-        if (namaError) {
+        if (viewModel.namaError) {
             Text(
                 text = stringResource(R.string.warning_nama),
                 color = MaterialTheme.colorScheme.error,
@@ -159,10 +167,10 @@ fun ScreenContent(modifier: Modifier = Modifier, viewModel: DetailViewModel) {
             value = viewModel.tanggalLahir,
             onValueChange = {
                 viewModel.tanggalLahir = it
-                tanggalLahirError = false
+                viewModel.tanggalLahirError = false
             },
             label = { Text(stringResource(R.string.tgl_lahir)) },
-            isError = tanggalLahirError,
+            isError = viewModel.tanggalLahirError,
             trailingIcon = {
                 Icon(
                     imageVector = Icons.Default.DateRange,
@@ -176,7 +184,7 @@ fun ScreenContent(modifier: Modifier = Modifier, viewModel: DetailViewModel) {
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
-        if (tanggalLahirError) {
+        if (viewModel.tanggalLahirError) {
             Text(
                 text = stringResource(R.string.warning_lahir),
                 color = MaterialTheme.colorScheme.error,
@@ -189,10 +197,10 @@ fun ScreenContent(modifier: Modifier = Modifier, viewModel: DetailViewModel) {
             value = viewModel.tanggalPilihan,
             onValueChange = {
                 viewModel.tanggalPilihan = it
-                tanggalPilihanError = false
+                viewModel.tanggalPilihanError = false
             },
             label = { Text(stringResource(R.string.tgl_piliha)) },
-            isError = tanggalPilihanError,
+            isError = viewModel.tanggalPilihanError,
             trailingIcon = {
                 Icon(
                     imageVector = Icons.Default.DateRange,
@@ -206,7 +214,7 @@ fun ScreenContent(modifier: Modifier = Modifier, viewModel: DetailViewModel) {
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
-        if (tanggalPilihanError) {
+        if (viewModel.tanggalPilihanError) {
             Text(
                 text = stringResource(R.string.warning_pilihan),
                 color = MaterialTheme.colorScheme.error,
@@ -217,11 +225,13 @@ fun ScreenContent(modifier: Modifier = Modifier, viewModel: DetailViewModel) {
 
         Button(
             onClick = {
-                namaError = viewModel.namaUser.isBlank()
-                tanggalLahirError = viewModel.tanggalLahir.isBlank() || !regexTanggal.matches(viewModel.tanggalLahir.trim())
-                tanggalPilihanError = viewModel.tanggalPilihan.isBlank() || !regexTanggal.matches(viewModel.tanggalPilihan.trim())
+                viewModel.namaError = viewModel.namaUser.isBlank()
+                viewModel.tanggalLahirError =
+                    viewModel.tanggalLahir.isBlank() || !regexTanggal.matches(viewModel.tanggalLahir.trim())
+                viewModel.tanggalPilihanError =
+                    viewModel.tanggalPilihan.isBlank() || !regexTanggal.matches(viewModel.tanggalPilihan.trim())
 
-                if (namaError || tanggalLahirError || tanggalPilihanError) {
+                if (viewModel.namaError || viewModel.tanggalLahirError || viewModel.tanggalPilihanError) {
                     viewModel.hasilUmur = ""
                     Toast.makeText(context, "Pastikan semua data valid", Toast.LENGTH_SHORT).show()
                     return@Button
@@ -229,11 +239,15 @@ fun ScreenContent(modifier: Modifier = Modifier, viewModel: DetailViewModel) {
 
                 val birthDate = try {
                     formatter.parse(viewModel.tanggalLahir.trim())
-                } catch (e: Exception) { null }
+                } catch (e: Exception) {
+                    null
+                }
 
                 val selectedDate = try {
                     formatter.parse(viewModel.tanggalPilihan.trim())
-                } catch (e: Exception) { null }
+                } catch (e: Exception) {
+                    null
+                }
 
                 if (birthDate == null || selectedDate == null) {
                     Toast.makeText(context, "Format tanggal tidak valid", Toast.LENGTH_SHORT).show()
@@ -248,7 +262,8 @@ fun ScreenContent(modifier: Modifier = Modifier, viewModel: DetailViewModel) {
                 } else {
                     var tahun = calPilihan.get(Calendar.YEAR) - calLahir.get(Calendar.YEAR)
                     var bulan = calPilihan.get(Calendar.MONTH) - calLahir.get(Calendar.MONTH)
-                    var hari = calPilihan.get(Calendar.DAY_OF_MONTH) - calLahir.get(Calendar.DAY_OF_MONTH)
+                    var hari =
+                        calPilihan.get(Calendar.DAY_OF_MONTH) - calLahir.get(Calendar.DAY_OF_MONTH)
 
                     if (hari < 0) {
                         bulan--
@@ -281,10 +296,13 @@ fun ScreenContent(modifier: Modifier = Modifier, viewModel: DetailViewModel) {
 
             Button(
                 onClick = {
-                    if (namaError || tanggalLahirError || tanggalPilihanError) {
-                        Toast.makeText(context, R.string.invalid, Toast.LENGTH_SHORT).show()
+                    if (viewModel.namaError || viewModel.tanggalLahirError || viewModel.tanggalPilihanError) {
+                        viewModel.hasilUmur = ""
+                        Toast.makeText(context, "Pastikan semua data valid", Toast.LENGTH_SHORT)
+                            .show()
                         return@Button
                     }
+
                     shareData(
                         context = context,
                         message = context.getString(
@@ -302,7 +320,6 @@ fun ScreenContent(modifier: Modifier = Modifier, viewModel: DetailViewModel) {
                 Text(text = stringResource(R.string.bagikan))
             }
         }
-
         if (showDatePicker) {
             DatePickerModalInput(
                 onDateSelected = { selectedMillis ->
@@ -310,10 +327,10 @@ fun ScreenContent(modifier: Modifier = Modifier, viewModel: DetailViewModel) {
                         val dateString = formatter.format(Date(it))
                         if (pilihanAtauTanggal == "lahir") {
                             viewModel.tanggalLahir = dateString
-                            tanggalLahirError = false
+                            viewModel.tanggalLahirError = false
                         } else {
                             viewModel.tanggalPilihan = dateString
-                            tanggalPilihanError = false
+                            viewModel.tanggalPilihanError = false
                         }
                     }
                     showDatePicker = false

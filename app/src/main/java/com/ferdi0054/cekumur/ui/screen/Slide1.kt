@@ -50,6 +50,7 @@ fun Slide1(navController: NavHostController) {
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun Slide1Preview() {

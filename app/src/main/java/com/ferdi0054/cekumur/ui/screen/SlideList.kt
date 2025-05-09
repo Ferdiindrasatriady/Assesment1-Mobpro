@@ -42,7 +42,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import androidx.room.Delete
 import com.ferdi0054.cekumur.R
 import com.ferdi0054.cekumur.model.Catatan
 import com.ferdi0054.cekumur.navigation.Screen
@@ -91,7 +90,6 @@ fun SlideList(navController: NavHostController) {
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.primary
                 )
-
             )
         }
     ) { padding ->

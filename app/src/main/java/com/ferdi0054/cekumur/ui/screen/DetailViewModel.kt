@@ -10,25 +10,29 @@ import com.ferdi0054.cekumur.model.Catatan
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class DetailViewModel (private  val dao: UmurDao): ViewModel() {
+class DetailViewModel(private val dao: UmurDao) : ViewModel() {
     var hasilUmur by mutableStateOf("")
 
-    var namaUser by  mutableStateOf("")
+    var namaUser by mutableStateOf("")
     var tanggalLahir by mutableStateOf("")
     var tanggalPilihan by mutableStateOf("")
-    fun insert (nama: String, tglLahir: String, tglSkrg: String, hasil: String){
+
+    var namaError by mutableStateOf(false)
+    var tanggalLahirError by mutableStateOf(false)
+    var tanggalPilihanError by mutableStateOf(false)
+    fun insert(nama: String, tglLahir: String, tglSkrg: String, hasil: String) {
         val catatan = Catatan(
             nama = nama,
             tgl_lahir = tglLahir,
             tgl_skrg = tglSkrg,
             hasil = hasil
         )
-        viewModelScope.launch (Dispatchers.IO){
+        viewModelScope.launch(Dispatchers.IO) {
             dao.insert(catatan)
         }
     }
 
-    fun update (id: Long, nama: String, tglLahir: String,tglSkrg: String, hasil: String){
+    fun update(id: Long, nama: String, tglLahir: String, tglSkrg: String, hasil: String) {
         val catatan = Catatan(
             id = id,
             nama = nama,
@@ -36,15 +40,17 @@ class DetailViewModel (private  val dao: UmurDao): ViewModel() {
             tgl_skrg = tglSkrg,
             hasil = hasil
         )
-        viewModelScope.launch (Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
             dao.update(catatan)
         }
     }
-    fun delete (id: Long) {
-        viewModelScope.launch (Dispatchers.IO) {
+
+    fun delete(id: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
             dao.daleteById(id)
         }
     }
+
     fun loadDataById(id: Long) {
         viewModelScope.launch {
             val data = dao.getCatatanById(id)
