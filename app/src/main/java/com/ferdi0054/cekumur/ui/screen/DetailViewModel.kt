@@ -45,4 +45,16 @@ class DetailViewModel (private  val dao: UmurDao): ViewModel() {
             dao.daleteById(id)
         }
     }
+    fun loadDataById(id: Long) {
+        viewModelScope.launch {
+            val data = dao.getCatatanById(id)
+            data?.let {
+                namaUser = it.nama
+                tanggalLahir = it.tgl_lahir
+                tanggalPilihan = it.tgl_skrg
+                hasilUmur = it.hasil
+            }
+        }
+    }
+
 }

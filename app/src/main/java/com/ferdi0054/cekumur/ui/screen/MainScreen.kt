@@ -38,6 +38,12 @@ fun MainScreen(navHostController: NavHostController, id: Long? = null) {
     val factory = ViewModelFactory(context)
     val viewModel: DetailViewModel = viewModel(factory = factory)
 
+    LaunchedEffect(id) {
+        if (id != null) {
+            viewModel.loadDataById(id)
+        }
+    }
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
