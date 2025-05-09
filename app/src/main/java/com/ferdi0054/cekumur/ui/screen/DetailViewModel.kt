@@ -16,10 +16,22 @@ class DetailViewModel (private  val dao: UmurDao): ViewModel() {
             hasil = hasil
         )
         viewModelScope.launch (Dispatchers.IO){
-            dao.Insert(catatan)
+            dao.insert(catatan)
         }
     }
-    fun getCatatan(id: Long): Catatan? {
-        return null
+    suspend fun getCatatan(id: Long): Catatan? {
+        return dao.getCatatanById(id)
+    }
+    fun update (id: Long, nama: String, tgl_lahir: String,tgl_skrg: String, hasil: String){
+        val catatan = Catatan(
+            id = id,
+            nama = nama,
+            tgl_lahir = tgl_lahir,
+            tgl_skrg = tgl_skrg,
+            hasil = hasil
+        )
+        viewModelScope.launch (Dispatchers.IO) {
+            dao.update(catatan)
+        }
     }
 }

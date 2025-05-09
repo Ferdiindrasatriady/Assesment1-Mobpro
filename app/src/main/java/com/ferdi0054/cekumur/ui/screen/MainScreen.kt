@@ -95,6 +95,8 @@ fun MainScreen(navHostController: NavHostController, id: Long? = null) {
                     IconButton(onClick = {
                         if (id == null){
                             viewModel.insert(nama, tglLahir, tglSkrg,hasil)
+                        } else {
+                            viewModel .update(id, nama, tglLahir,tglSkrg, hasil)
                         }
                         navHostController.popBackStack()
                     }) {

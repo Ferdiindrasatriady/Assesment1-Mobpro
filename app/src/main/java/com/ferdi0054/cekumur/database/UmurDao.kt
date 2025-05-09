@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
     interface UmurDao{
 
         @Insert
-        suspend fun Insert(catatan: Catatan)
+        suspend fun insert(catatan: Catatan)
 
         @Update
         suspend fun update (catatan: Catatan)
@@ -19,4 +19,7 @@ import kotlinx.coroutines.flow.Flow
 
         @Query ("SELECT * FROM cek_umur ORDER BY tgl_lahir, tgl_skrg DESC")
         fun getCatatan (): Flow<List<Catatan>>
+
+        @Query ("SELECT * FROM cek_umur WHERE id = :id")
+        suspend fun getCatatanById(id: Long): Catatan?
     }
