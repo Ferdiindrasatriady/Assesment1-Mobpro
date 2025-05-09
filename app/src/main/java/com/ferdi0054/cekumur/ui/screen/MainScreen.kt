@@ -28,8 +28,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -65,10 +63,10 @@ fun MainScreen(navHostController: NavHostController, id: Long? = null) {
     val factory = ViewModelFactory(context)
     val viewModel: DetailViewModel = viewModel(factory = factory)
 
-    var nama by remember { mutableStateOf("") }
-    var tgl_lahir by remember { mutableStateOf("") }
-    var tgl_skrg by remember { mutableStateOf("") }
-    var hasil by remember { mutableStateOf("") }
+    val nama by remember { mutableStateOf("") }
+    val tglLahir by remember { mutableStateOf("") }
+    val tglSkrg by remember { mutableStateOf("") }
+    val hasil by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = {
@@ -96,7 +94,7 @@ fun MainScreen(navHostController: NavHostController, id: Long? = null) {
                 actions = {
                     IconButton(onClick = {
                         if (id == null){
-                            viewModel.insert(nama, tgl_lahir, tgl_skrg, hasil)
+                            viewModel.insert(nama, tglLahir, tglSkrg,hasil)
                         }
                         navHostController.popBackStack()
                     }) {
