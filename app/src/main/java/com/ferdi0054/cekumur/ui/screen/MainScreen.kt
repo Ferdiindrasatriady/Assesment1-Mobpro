@@ -5,38 +5,15 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.outlined.Check
-import androidx.compose.material3.Button
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DisplayMode
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -50,9 +27,7 @@ import com.ferdi0054.cekumur.R
 import com.ferdi0054.cekumur.ui.theme.CekUmurTheme
 import com.ferdi0054.cekumur.util.ViewModelFactory
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 const val Key_ID_CATATAN = "idCatatan"
 
@@ -63,11 +38,6 @@ fun MainScreen(navHostController: NavHostController, id: Long? = null) {
     val factory = ViewModelFactory(context)
     val viewModel: DetailViewModel = viewModel(factory = factory)
 
-    val nama by remember { mutableStateOf("") }
-    val tglLahir by remember { mutableStateOf("") }
-    val tglSkrg by remember { mutableStateOf("") }
-    val hasil by remember { mutableStateOf("") }
-
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -77,15 +47,16 @@ fun MainScreen(navHostController: NavHostController, id: Long? = null) {
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.kembali),
                             tint = MaterialTheme.colorScheme.primary
-
                         )
                     }
                 },
                 title = {
-                    if (id == null)
-                    Text(text = stringResource(id = R.string.app_name))
-                    else
-                        Text(text = stringResource(id = R.string.edit_inputan))
+                    Text(
+                        text = if (id == null)
+                            stringResource(id = R.string.app_name)
+                        else
+                            stringResource(id = R.string.edit_inputan)
+                    )
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -93,10 +64,21 @@ fun MainScreen(navHostController: NavHostController, id: Long? = null) {
                 ),
                 actions = {
                     IconButton(onClick = {
-                        if (id == null){
-                            viewModel.insert(nama, tglLahir, tglSkrg,hasil)
+                        if (id == null) {
+                            viewModel.insert(
+                                nama = viewModel.namaUser,
+                                tglLahir = viewModel.tanggalLahir,
+                                tglSkrg = viewModel.tanggalPilihan,
+                                hasil = viewModel.hasilUmur
+                            )
                         } else {
-                            viewModel .update(id, nama, tglLahir,tglSkrg, hasil)
+                            viewModel.update(
+                                id = id,
+                                nama = viewModel.namaUser,
+                                tglLahir = viewModel.tanggalLahir,
+                                tglSkrg = viewModel.tanggalPilihan,
+                                hasil = viewModel.hasilUmur
+                            )
                         }
                         navHostController.popBackStack()
                     }) {
@@ -106,21 +88,22 @@ fun MainScreen(navHostController: NavHostController, id: Long? = null) {
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
+                    if (id != null) {
+                        DeleteAction {
+                            viewModel.delete(id)
+                            navHostController.popBackStack()
+                        }
+                    }
                 }
             )
         }
     ) { innerPadding ->
-        ScreenContent(modifier = Modifier.padding(innerPadding))
+        ScreenContent(modifier = Modifier.padding(innerPadding), viewModel = viewModel)
     }
 }
 
 @Composable
-fun ScreenContent(modifier: Modifier = Modifier) {
-
-    var namaUser by remember { mutableStateOf("") }
-    var tanggalLahir by remember { mutableStateOf("") }
-    var tanggalPilihan by remember { mutableStateOf("") }
-
+fun ScreenContent(modifier: Modifier = Modifier, viewModel: DetailViewModel) {
     var namaError by remember { mutableStateOf(false) }
     var tanggalLahirError by remember { mutableStateOf(false) }
     var tanggalPilihanError by remember { mutableStateOf(false) }
@@ -128,11 +111,9 @@ fun ScreenContent(modifier: Modifier = Modifier) {
     var showDatePicker by remember { mutableStateOf(false) }
     var pilihanAtauTanggal by remember { mutableStateOf("") }
 
-    val formatter = remember { SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()) }
-
-    var hasilUmur by remember { mutableStateOf("") }
-
-//    val context = LocalContext.current
+    val formatter = remember { SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()) }
+    val regexTanggal = Regex("^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\\d{4}")
+    val context = LocalContext.current
 
     Column(
         modifier = modifier
@@ -148,11 +129,10 @@ fun ScreenContent(modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxWidth()
         )
 
-        // Input Nama
         OutlinedTextField(
-            value = namaUser,
+            value = viewModel.namaUser,
             onValueChange = {
-                namaUser = it
+                viewModel.namaUser = it
                 namaError = false
             },
             label = { Text(stringResource(R.string.nama)) },
@@ -169,11 +149,10 @@ fun ScreenContent(modifier: Modifier = Modifier) {
             )
         }
 
-        // Input Tanggal Lahir
         OutlinedTextField(
-            value = tanggalLahir,
+            value = viewModel.tanggalLahir,
             onValueChange = {
-                tanggalLahir = it
+                viewModel.tanggalLahir = it
                 tanggalLahirError = false
             },
             label = { Text(stringResource(R.string.tgl_lahir)) },
@@ -200,11 +179,10 @@ fun ScreenContent(modifier: Modifier = Modifier) {
             )
         }
 
-        // Input Tanggal Pilihan
         OutlinedTextField(
-            value = tanggalPilihan,
+            value = viewModel.tanggalPilihan,
             onValueChange = {
-                tanggalPilihan = it
+                viewModel.tanggalPilihan = it
                 tanggalPilihanError = false
             },
             label = { Text(stringResource(R.string.tgl_piliha)) },
@@ -230,77 +208,74 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 modifier = Modifier.align(Alignment.Start)
             )
         }
+
         Button(
             onClick = {
-                namaError = namaUser.isBlank()
-                tanggalLahirError = tanggalLahir.isBlank()
-                tanggalPilihanError = tanggalPilihan.isBlank()
+                namaError = viewModel.namaUser.isBlank()
+                tanggalLahirError = viewModel.tanggalLahir.isBlank() || !regexTanggal.matches(viewModel.tanggalLahir.trim())
+                tanggalPilihanError = viewModel.tanggalPilihan.isBlank() || !regexTanggal.matches(viewModel.tanggalPilihan.trim())
 
                 if (namaError || tanggalLahirError || tanggalPilihanError) {
-                    hasilUmur = ""
+                    viewModel.hasilUmur = ""
+                    Toast.makeText(context, "Pastikan semua data valid", Toast.LENGTH_SHORT).show()
                     return@Button
                 }
 
-                val birthDate = formatter.parse(tanggalLahir)
-                val selectedDate = formatter.parse(tanggalPilihan)
+                val birthDate = try {
+                    formatter.parse(viewModel.tanggalLahir.trim())
+                } catch (e: Exception) { null }
 
-//                val birthDate = try { formatter.parse(tanggalLahir) } catch (e: Exception) { null }
-//                val selectedDate = try { formatter.parse(tanggalPilihan) } catch (e: Exception) { null }
-//
-//                if (birthDate == null || selectedDate == null) {
-//                    hasilUmur = context.getString(R.string.warning_nama) // atau string langsung
-//                    return@Button
-//                }
+                val selectedDate = try {
+                    formatter.parse(viewModel.tanggalPilihan.trim())
+                } catch (e: Exception) { null }
 
-                if (birthDate != null && selectedDate != null) {
-                    val calLahir = Calendar.getInstance().apply { time = birthDate }
-                    val calPilihan = Calendar.getInstance().apply { time = selectedDate }
+                if (birthDate == null || selectedDate == null) {
+                    Toast.makeText(context, "Format tanggal tidak valid", Toast.LENGTH_SHORT).show()
+                    return@Button
+                }
 
-                    if (calLahir.after(calPilihan)) {
-                        hasilUmur = "! Tanggal lahir tidak boleh setelah tanggal pilihan."
-                    } else {
-                        var tahun = calPilihan.get(Calendar.YEAR) - calLahir.get(Calendar.YEAR)
-                        var bulan = calPilihan.get(Calendar.MONTH) - calLahir.get(Calendar.MONTH)
-                        var hari =
-                            calPilihan.get(Calendar.DAY_OF_MONTH) - calLahir.get(Calendar.DAY_OF_MONTH)
-                        if (hari < 0) {
-                            bulan--
-                            hari += calLahir.getActualMaximum(Calendar.DAY_OF_MONTH)
-                        }
+                val calLahir = Calendar.getInstance().apply { time = birthDate }
+                val calPilihan = Calendar.getInstance().apply { time = selectedDate }
 
-                        if (bulan < 0) {
-                            tahun--
-                            bulan += 12
-                        }
+                if (calLahir.after(calPilihan)) {
+                    viewModel.hasilUmur = "! Tanggal lahir tidak boleh setelah tanggal pilihan."
+                } else {
+                    var tahun = calPilihan.get(Calendar.YEAR) - calLahir.get(Calendar.YEAR)
+                    var bulan = calPilihan.get(Calendar.MONTH) - calLahir.get(Calendar.MONTH)
+                    var hari = calPilihan.get(Calendar.DAY_OF_MONTH) - calLahir.get(Calendar.DAY_OF_MONTH)
 
-
-                        val locale = Locale.getDefault().language
-                        hasilUmur = if (locale == "en") {
-                            "$namaUser: Your age is $tahun years $bulan months $hari days"
-                        } else {
-                            "$namaUser: Umur Anda $tahun tahun $bulan bulan $hari hari"
-                        }
-
+                    if (hari < 0) {
+                        bulan--
+                        hari += calLahir.getActualMaximum(Calendar.DAY_OF_MONTH)
+                    }
+                    if (bulan < 0) {
+                        tahun--
+                        bulan += 12
                     }
 
-//                } else {
-//                    hasilUmur = "! Format tanggal tidak valid."
+                    val locale = Locale.getDefault().language
+                    viewModel.hasilUmur = if (locale == "en") {
+                        "${viewModel.namaUser}: Your age is $tahun years $bulan months $hari days"
+                    } else {
+                        "${viewModel.namaUser}: Umur Anda $tahun tahun $bulan bulan $hari hari"
+                    }
                 }
             },
             modifier = Modifier.padding(top = 8.dp)
         ) {
             Text(stringResource(R.string.hitung))
         }
-        val context = LocalContext.current
-        if (hasilUmur.isNotEmpty()) {
+
+        if (viewModel.hasilUmur.isNotEmpty()) {
             Text(
-                text = hasilUmur,
+                text = viewModel.hasilUmur,
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(top = 16.dp)
             )
+
             Button(
                 onClick = {
-                    if (namaError || tanggalLahirError || tanggalPilihanError){
+                    if (namaError || tanggalLahirError || tanggalPilihanError) {
                         Toast.makeText(context, R.string.invalid, Toast.LENGTH_SHORT).show()
                         return@Button
                     }
@@ -308,7 +283,10 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                         context = context,
                         message = context.getString(
                             R.string.bagikan_template,
-                            namaUser, tanggalLahir, tanggalPilihan, hasilUmur
+                            viewModel.namaUser,
+                            viewModel.tanggalLahir,
+                            viewModel.tanggalPilihan,
+                            viewModel.hasilUmur
                         )
                     )
                 },
@@ -318,16 +296,17 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 Text(text = stringResource(R.string.bagikan))
             }
         }
+
         if (showDatePicker) {
             DatePickerModalInput(
                 onDateSelected = { selectedMillis ->
                     selectedMillis?.let {
                         val dateString = formatter.format(Date(it))
                         if (pilihanAtauTanggal == "lahir") {
-                            tanggalLahir = dateString
+                            viewModel.tanggalLahir = dateString
                             tanggalLahirError = false
-                        } else if (pilihanAtauTanggal == "pilihan") {
-                            tanggalPilihan = dateString
+                        } else {
+                            viewModel.tanggalPilihan = dateString
                             tanggalPilihanError = false
                         }
                     }
@@ -338,6 +317,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
         }
     }
 }
+
 private fun shareData(context: Context, message: String) {
     val shareIntent = Intent(Intent.ACTION_SEND).apply {
         type = "text/plain"
@@ -347,6 +327,7 @@ private fun shareData(context: Context, message: String) {
         context.startActivity(shareIntent)
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePickerModalInput(

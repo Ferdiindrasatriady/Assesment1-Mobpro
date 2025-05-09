@@ -25,4 +25,6 @@
     <string name="semua_list">AgeChecker list</string>
     <string name="edit_inputan">Edit input</string>
     <string name="invalid">Input cannot be empty</string>
+    <string name="lainya">Another option</string>
+    <string name="hapus">Delete note</string>
 </resources>

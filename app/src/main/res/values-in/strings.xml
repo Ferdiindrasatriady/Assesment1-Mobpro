@@ -25,4 +25,6 @@
     <string name="semua_list">List hitung umur</string>
     <string name="edit_inputan">Edit inputan</string>
     <string name="invalid">Inputan tidak boleh kosong</string>
+    <string name="lainya">Opsi lainnya</string>
+    <string name="hapus">Hapus catatan</string>
 </resources>

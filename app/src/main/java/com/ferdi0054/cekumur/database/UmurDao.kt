@@ -22,4 +22,7 @@ import kotlinx.coroutines.flow.Flow
 
         @Query ("SELECT * FROM cek_umur WHERE id = :id")
         suspend fun getCatatanById(id: Long): Catatan?
+
+        @Query ("DELETE FROM cek_umur WHERE id = :id")
+        suspend fun daleteById(id: Long)
     }
