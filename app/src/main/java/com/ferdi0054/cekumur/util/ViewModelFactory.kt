@@ -10,7 +10,8 @@ import com.ferdi0054.cekumur.ui.screen.MainViewModel
 class ViewModelFactory(
     private val context: Context
 ) : ViewModelProvider.Factory {
-    @Suppress fun <T: ViewModel> Create (modelClass: Class<T>) :T{
+    @Suppress
+    override fun <T: ViewModel> create (modelClass: Class<T>) :T{
         val dao = CatatanDb.getInstance(context).dao
         if (modelClass.isAssignableFrom(MainViewModel::class.java)){
             return MainViewModel (dao) as T
