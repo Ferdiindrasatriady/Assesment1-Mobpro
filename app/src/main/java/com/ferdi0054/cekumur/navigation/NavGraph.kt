@@ -23,7 +23,7 @@ fun SetupNavGraph(navController: NavHostController = rememberNavController()) {
         composable(route = Screen.Home.route) {
             Slide1(navController = navController)
         }
-        composable(route = Screen.SlideList.route){
+        composable(route = Screen.SlideList.route) {
             SlideList(navController)
         }
         composable(route = Screen.CekUmur.route) {
@@ -32,11 +32,11 @@ fun SetupNavGraph(navController: NavHostController = rememberNavController()) {
         composable(
             route = Screen.FormUbah.route,
             arguments = listOf(
-                navArgument(Key_ID_CATATAN) {type = NavType.LongType}
+                navArgument(Key_ID_CATATAN) { type = NavType.LongType }
             )
         ) { navBackStackEntry ->
             val id = navBackStackEntry.arguments?.getLong(Key_ID_CATATAN)
-            MainScreen(navController,id)
+            MainScreen(navController, id)
         }
     }
 }

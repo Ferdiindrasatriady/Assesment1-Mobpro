@@ -7,23 +7,21 @@ import androidx.room.Update
 import com.ferdi0054.cekumur.model.Catatan
 import kotlinx.coroutines.flow.Flow
 
-    @Dao
-    interface UmurDao{
+@Dao
+interface UmurDao {
 
-        @Insert
-        suspend fun insert(catatan: Catatan)
+    @Insert
+    suspend fun insert(catatan: Catatan)
 
-        @Update
-        suspend fun update (catatan: Catatan)
+    @Update
+    suspend fun update(catatan: Catatan)
 
+    @Query("SELECT * FROM cek_umur ORDER BY tgl_lahir, tgl_skrg DESC")
+    fun getCatatan(): Flow<List<Catatan>>
 
-        @Query ("SELECT * FROM cek_umur ORDER BY tgl_lahir, tgl_skrg DESC")
-        fun getCatatan (): Flow<List<Catatan>>
+    @Query("SELECT * FROM cek_umur WHERE id = :id")
+    suspend fun getCatatanById(id: Long): Catatan?
 
-        @Query ("SELECT * FROM cek_umur WHERE id = :id")
-        suspend fun getCatatanById(id: Long): Catatan?
-
-        @Query ("DELETE FROM cek_umur WHERE id = :id")
-        suspend fun daleteById(id: Long)
-
-    }
+    @Query("DELETE FROM cek_umur WHERE id = :id")
+    suspend fun daleteById(id: Long)
+}

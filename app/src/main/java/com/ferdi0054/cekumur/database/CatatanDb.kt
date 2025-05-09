@@ -8,18 +8,18 @@ import com.ferdi0054.cekumur.model.Catatan
 
 @Database(entities = [Catatan::class], version = 1, exportSchema = false)
 abstract class CatatanDb : RoomDatabase() {
-    abstract  val dao: UmurDao
+    abstract val dao: UmurDao
 
-    companion object{
+    companion object {
 
         @Volatile
         private var INSTANCE: CatatanDb? = null
 
-        fun  getInstance (context: Context): CatatanDb{
+        fun getInstance(context: Context): CatatanDb {
             synchronized(this) {
                 var instance = INSTANCE
 
-                if (instance== null) {
+                if (instance == null) {
                     instance = Room.databaseBuilder(
                         context.applicationContext,
                         CatatanDb::class.java,

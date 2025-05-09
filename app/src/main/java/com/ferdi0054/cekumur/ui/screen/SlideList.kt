@@ -72,9 +72,7 @@ fun SlideList(navController: NavHostController) {
     val data by viewModel.data.collectAsState()
 
 
-
-
-    val dataStore = SettingsDataStore (LocalContext.current)
+    val dataStore = SettingsDataStore(LocalContext.current)
     val showList by dataStore.layoutFlow.collectAsState(true)
 
     Scaffold(
@@ -110,16 +108,18 @@ fun SlideList(navController: NavHostController) {
                     titleContentColor = MaterialTheme.colorScheme.primary
                 ),
                 actions = {
-                    IconButton(onClick = { CoroutineScope(Dispatchers.IO).launch {
-                        dataStore.saveLayout(!showList)
-                    } }) {
+                    IconButton(onClick = {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            dataStore.saveLayout(!showList)
+                        }
+                    }) {
                         Icon(
                             painter = painterResource(
-                                if (showList)R.drawable.baseline_grid_view_24
+                                if (showList) R.drawable.baseline_grid_view_24
                                 else R.drawable.baseline_view_list_24
                             ),
                             contentDescription = stringResource(
-                                if (showList)R.string.grid
+                                if (showList) R.string.grid
                                 else R.string.list
                             ),
                             tint = MaterialTheme.colorScheme.primary
@@ -130,24 +130,24 @@ fun SlideList(navController: NavHostController) {
         }
     ) { padding ->
         if (showList)
-        LazyColumn(
-            modifier = Modifier
-                .padding(padding)
-                .padding(16.dp),
-            contentPadding = PaddingValues(bottom = 84.dp)
-        ) {
-            items(data) {
-                ListItem(catatan = it) {
-                    navController.navigate(Screen.FormUbah.withId(it.id))
+            LazyColumn(
+                modifier = Modifier
+                    .padding(padding)
+                    .padding(16.dp),
+                contentPadding = PaddingValues(bottom = 84.dp)
+            ) {
+                items(data) {
+                    ListItem(catatan = it) {
+                        navController.navigate(Screen.FormUbah.withId(it.id))
+                    }
+                    HorizontalDivider()
                 }
-                HorizontalDivider()
             }
-        }
         else {
             LazyVerticalStaggeredGrid(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 8.dp), // penting agar tidak mentok layar
+                    .padding(horizontal = 8.dp),
                 columns = StaggeredGridCells.Fixed(2),
                 verticalItemSpacing = 12.dp,
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -217,12 +217,13 @@ fun DeleteAction(delete: () -> Unit) {
         }
     }
 }
+
 @Composable
 fun GridItem(catatan: Catatan, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(4.dp) // memberi jarak antar card
+            .padding(4.dp)
             .clickable { onClick() },
 
         colors = CardDefaults.cardColors(
@@ -259,12 +260,11 @@ fun GridItem(catatan: Catatan, onClick: () -> Unit) {
     }
 }
 
-
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun SlideListScreenPreview() {
     CekUmurTheme {
-        SlideList(rememberNavController()) // diperbaiki agar preview menampilkan SlideList
+        SlideList(rememberNavController())
     }
 }

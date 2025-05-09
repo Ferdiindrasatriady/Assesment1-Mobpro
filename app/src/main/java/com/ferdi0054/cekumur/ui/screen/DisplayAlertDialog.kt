@@ -11,32 +11,32 @@ import com.ferdi0054.cekumur.R
 import com.ferdi0054.cekumur.ui.theme.CekUmurTheme
 
 @Composable
-fun DisplayAlertDialog (
-    onDismissRequest: ()->Unit,
-    onConfirmation: ()->Unit
+fun DisplayAlertDialog(
+    onDismissRequest: () -> Unit,
+    onConfirmation: () -> Unit
 ) {
     AlertDialog(
         text = { Text(text = stringResource(R.string.pesan_hapus)) },
         confirmButton = {
-            TextButton(onClick = {onConfirmation()}) {
+            TextButton(onClick = { onConfirmation() }) {
                 Text(text = stringResource(R.string.tombol_hapus))
             }
         },
         dismissButton = {
-            TextButton(onClick = {onDismissRequest()}) {
+            TextButton(onClick = { onDismissRequest() }) {
                 Text(text = stringResource(R.string.tombol_batal))
             }
         },
-        onDismissRequest = {onDismissRequest}
+        onDismissRequest = { onDismissRequest }
     )
-
 }
+
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun DialogPreview() {
     CekUmurTheme {
-        DisplayAlertDialog (
+        DisplayAlertDialog(
             onDismissRequest = {},
             onConfirmation = {}
         )
