@@ -2,19 +2,27 @@ package com.ferdi0054.cekumur.ui.screen
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -60,6 +68,7 @@ fun SlideList(navController: NavHostController) {
     val data by viewModel.data.collectAsState()
 
     var showList by remember { mutableStateOf(true) }
+
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
@@ -110,6 +119,7 @@ fun SlideList(navController: NavHostController) {
             )
         }
     ) { padding ->
+        if (showList)
         LazyColumn(
             modifier = Modifier
                 .padding(padding)
@@ -123,6 +133,25 @@ fun SlideList(navController: NavHostController) {
                 HorizontalDivider()
             }
         }
+        else {
+            LazyVerticalStaggeredGrid(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 8.dp), // penting agar tidak mentok layar
+                columns = StaggeredGridCells.Fixed(2),
+                verticalItemSpacing = 12.dp,
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(8.dp, 8.dp, 8.dp, 84.dp)
+            )
+            {
+                items(data) {
+                    GridItem(catatan = it) {
+                        navController.navigate(Screen.FormUbah.withId(it.id))
+                    }
+                }
+            }
+        }
+
     }
 }
 
@@ -178,6 +207,48 @@ fun DeleteAction(delete: () -> Unit) {
         }
     }
 }
+@Composable
+fun GridItem(catatan: Catatan, onClick: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(4.dp) // memberi jarak antar card
+            .clickable { onClick() },
+
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+        ),
+        border = BorderStroke(1.dp, DividerDefaults.color)
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
+            Text(
+                text = catatan.nama,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                text = catatan.tgl_lahir,
+                style = MaterialTheme.typography.bodySmall
+            )
+            Text(
+                text = catatan.tgl_skrg,
+                style = MaterialTheme.typography.bodySmall
+            )
+            Text(
+                text = catatan.hasil,
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+    }
+}
+
 
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
